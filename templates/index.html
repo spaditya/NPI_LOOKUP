@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NPI Lookup</title>
+    <!-- Links CSS page to HTML page -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <!-- JavaScript function(seachNPI) to call backend and display search results -->
+    <script>
+        function searchNPI() {
+            // Get the user's search input and selected search type
+            let query = document.getElementById("searchQuery").value;
+            let type = document.getElementById("searchType").value;
+            // If input is empty, alert user
+            if (!query) {
+                alert("Enter a search term.");
+                return;
+            }
+            // Fetch data from backend
+            fetch(`/search?query=${query}&type=${type}`)
+            // Convert response to JSON
+                .then(response => response.json())
+                .then(data => {
+                    const resultDiv = document.getElementById("result");
+                    // Handles errors from backend
+                    if (data.error) {
+                        resultDiv.innerHTML = `<p>${data.error}</p>`;
+                        return;
+                    }
+                    // If no results are found, alert user
+                    if (!Array.isArray(data) || data.length === 0) {
+                        resultDiv.innerHTML = `<p>No results found.</p>`;
+                        return;
+                    }
+                    // Display search results in a table
+                    let html = `<table border="1" style="margin-top: 20px;">
+                                    <tr>
+                                        <th>NPI</th>
+                                        <th>Name</th>
+                                        <th>Taxonomy</th>
+                                        <th>Location</th>
+                                    </tr>`;
+                    // Loop through each provider and display their information
+                    data.forEach(provider => {
+                        html += `
+                            <tr>
+                                <td>${provider.NPI}</td>
+                                <td>${provider.Name}</td>
+                                <td>${provider.Taxonomy}</td>
+                                <td>${provider.Location}</td>
+                            </tr>`;
+                    });
+                    // Finishes the tabel and displays into the page
+                    html += `</table>`;
+                    resultDiv.innerHTML = html;
+                })
+                // Handles errors from fetch (like no internet)
+                .catch(error => {
+                    document.getElementById("result").innerHTML = `<p>Error fetching data.</p>`;
+                    console.error("Error:", error);
+                });
+        }
+    </script>
+</head>
+<body>
+    <h1>NPI Lookup Tool</h1>
+    <!-- Input box, dropdown and search  button -->
+    <input type="text" id="searchQuery" placeholder="Enter NPI, name, or organization">
+    <select id="searchType">
+        <option value="npi">NPI Number</option>
+        <option value="first_name">First Name</option>
+        <option value="last_name">Last Name</option>
+        <option value="organization">Organization Name</option>
+    </select>
+    <button onclick="searchNPI()">Search</button>
+    <!-- Display search results here -->
+    <div id="result" style="margin-top: 20px;"></div>
+</body>
+</html>

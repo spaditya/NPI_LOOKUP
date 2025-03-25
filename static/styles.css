@@ -1,0 +1,32 @@
+/* Set the font, center everything, add spacing, and change background color */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 20px;
+    background-color: #8c26da;
+}
+
+/* Style the container to center the content and set a max width */
+.container {
+    width: 50%;
+    margin: auto;
+}
+
+/* Style input fields, dropdowns, and buttons for spacing */
+input, select, button {
+    padding: 10px;
+    margin: 5px;
+}
+
+/* Style the results table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+/* Add border and spacing to table headers and cells */
+th, td {
+    border: 1px solid #130101;
+    padding: 10px;
+}
