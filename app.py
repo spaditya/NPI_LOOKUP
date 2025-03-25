@@ -1,4 +1,4 @@
-# Importing libraries
+# Import Flask tools to build the app, handle user input, render HTML, and return JSON
 from flask import Flask, render_template, request, jsonify
 import requests
 
